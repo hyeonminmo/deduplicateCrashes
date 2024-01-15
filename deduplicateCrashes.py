@@ -71,6 +71,28 @@ def compareASANLogs(logA, logB):
     else:
         return UNDUPLICATED
 
+## return ASAN logs from file path.
+def getLogsFromFile(filePath):
+    asanLogs = []
+    on = False
+    with open(filePath, 'r') as log:
+        for line in log:
+            if on:
+                if line == '\n':
+                    break
+                asanLogs.append(line)
+            elif line.find('ERROR'):
+                on = True
+    return asanLogs
+
+def deduplicateCrashes(targetProgram):
+    targetPath = os.path.join(LOGPATH, targetProgram)
+    
+    # get directory list in target program directory
+    for trial in os.listdir(targetPath):
+        # read ASAN log files in trial* 
+        for log in os.listdir(trial):
+            print(log)
 
 def main():
     print("DONE!")

@@ -242,10 +242,9 @@ def checkOutputDirectory(outputDirectoryPath):
         os.mkdir(outputDirectoryPath)
 
 crashes = []
-def makeASANLogs():
+def makeASANScript():
     # get target program properly
     n = 0
-    f = open('command.sh', 'w')
     for dir in os.listdir(CRASHPATH):
         trial = 0 # fuzzing trial number
         if '_' in dir:
@@ -257,7 +256,8 @@ def makeASANLogs():
             targetProgram = dir
             targetProgramPath = TARGETPATH[dir]
             trial = 1
-
+        
+        f = open(targetProgram + '.sh', 'a+t')
         
         checkOutputDirectory(os.path.join(OUTPUTPATH, targetProgram))
         saveDir = os.path.join(OUTPUTPATH, os.path.join(targetProgram, 'trial' + str(trial)))
@@ -278,16 +278,15 @@ def makeASANLogs():
                                 crashes.append(filePath)
                             else:
                                 continue
-    f.close()                        
-
-    
+        f.close()                        
 
 
 def main():
     checkOutputDirectory(OUTPUTPATH)
-    makeASANLogs()
+    makeASANScript()
 
         
 
 if __name__ == "__main__":
+
     main()
