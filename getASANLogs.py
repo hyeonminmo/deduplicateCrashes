@@ -258,6 +258,7 @@ def makeASANLogs():
             targetProgramPath = TARGETPATH[dir]
             trial = 1
 
+        
         checkOutputDirectory(os.path.join(OUTPUTPATH, targetProgram))
         saveDir = os.path.join(OUTPUTPATH, os.path.join(targetProgram, 'trial' + str(trial)))
         checkOutputDirectory(saveDir)
@@ -271,7 +272,7 @@ def makeASANLogs():
                         if 'input' in file:
                             filePath = os.path.join(root_, file)
                             if filePath not in crashes:
-                                command = "ASAN_OPTIONS=\"log_path=" + os.path.join(saveDir, str(trial) + str(n)) + "\" " + targetProgramPath + FRONTOPTIONS + filePath + REAROPTIONS + "\n"
+                                command = "ASAN_OPTIONS=\"log_path=" + os.path.join(saveDir, str(trial) + str(n)) + "\" " + targetProgramPath + FRONTOPTIONS[targetProgram] + filePath + REAROPTIONS[targetProgram] + "\n"
                                 n += 1
                                 f.write(command)
                                 crashes.append(filePath)
