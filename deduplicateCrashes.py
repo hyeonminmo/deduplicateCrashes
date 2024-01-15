@@ -9,6 +9,7 @@ TARGETPATH = {
     # FTS target program
     'boringssl-2016-02-12': os.path.join(FTSPATH, 'boringssl-2016-02-12/boringssl-2016-02-12'),
     'c-ares-CVE-2016-5180': os.path.join(FTSPATH, 'c-ares-CVE-2016-5180/c-ares-CVE-2016-5180'),
+    'c-ares': os.path.join(FTSPATH, 'c-ares-CVE-2016-5180/c-ares-CVE-2016-5180'),
     'guetzli-2017-3-30': os.path.join(FTSPATH, 'guetzli-2017-3-30/guetzli-2017-3-30'),
     'harfbuzz-1.3.2': os.path.join(FTSPATH, 'harfbuzz-1.3.2/harfbuzz-1.3.2'),
     'json-2017-02-12': os.path.join(FTSPATH, 'json-2017-02-12/json-2017-02-12'),
