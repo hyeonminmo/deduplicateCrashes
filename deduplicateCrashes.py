@@ -29,6 +29,7 @@ TARGETPATH = {
     'openthread-radio': os.path.join(FTSPATH, 'openthread-2018-02-27-radio/openthread-2018-02-27-radio'),
     'pcre2-10.00': os.path.join(FTSPATH, 'pcre2-10.00/pcre2-10.00'),
     'proj4-2017-08-14': os.path.join(FTSPATH, 'proj4-2017-08-14/proj4-2017-08-14'),
+    'proj4': os.path.join(FTSPATH, 'proj4-2017-08-14/proj4-2017-08-14'),
     're2-2014-12-09': os.path.join(FTSPATH, 're2-2014-12-09/re2-2014-12-09'),
     'sqlite-2016-11-14': os.path.join(FTSPATH, 'sqlite-2016-11-14/sqlite-2016-11-14'),
     'vorbis-2017-12-11': os.path.join(FTSPATH, 'vorbis-2017-12-11/vorbis-2017-12-11'),
