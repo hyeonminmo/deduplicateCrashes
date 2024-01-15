@@ -149,7 +149,6 @@ def makeASANLogs():
                 dirPath = os.path.join(root, dir)
                 for (root_, directories_, files_) in os.walk(dirPath):
                     for file in files_:
-                        print(file)
                         if 'input' in file:
                             filePath = os.path.join(root_, file)
                             if filePath not in crashes:
