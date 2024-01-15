@@ -278,7 +278,7 @@ def makeASANScript():
                                 crashes.append(filePath)
                             else:
                                 continue
-        f.close()                        
+        f.close()
 
 
 def main():

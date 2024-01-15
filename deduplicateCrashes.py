@@ -62,40 +62,58 @@ def checkOutputDirectory(outputDirectoryPath):
         os.mkdir(outputDirectoryPath)
 
 ## return True if logA and logB is equal.
-def compareASANLogs(logA, logB):
+def isDuplicate(logList, log):
     DUPLICATED = True
     UNDUPLICATED = False
 
-    if logA == logB:
-        return DUPLICATED
-    else:
+    if len(logList) == 0:
         return UNDUPLICATED
+    
+    for logA in logList:
+        if logA == log:
+            return DUPLICATED        
+    return UNDUPLICATED
 
 ## return ASAN logs from file path.
 def getLogsFromFile(filePath):
     asanLogs = []
-    on = False
     with open(filePath, 'r') as log:
         for line in log:
-            if on:
-                if line == '\n':
-                    break
+            if '#' in line:
                 asanLogs.append(line)
-            elif line.find('ERROR'):
-                on = True
+            elif line == '\n':
+                break
     return asanLogs
 
 def deduplicateCrashes(targetProgram):
     targetPath = os.path.join(LOGPATH, targetProgram)
-    
+    logList = [] # Log details
+    uniqueBugs = [] # File name
+
     # get directory list in target program directory
     for trial in os.listdir(targetPath):
+
+        trialPath = os.path.join(targetPath, trial)
         # read ASAN log files in trial* 
-        for log in os.listdir(trial):
-            print(log)
+        for logFile in os.listdir(trial):
+            logPath = os.path.join(trialPath, logFile)
+            log = getLogsFromFile(logPath)
+            # if the crash is unique crash
+            if isDuplicate(logList=logList, log=log):
+                uniqueBugs[logList.index(log)].append(logFile)
+            else:
+                tmp = []
+                tmp.append(logFile)
+                uniqueBugs.append(tmp)
+                logList.append(log)
+
+    print("========================")
+    print(logList)
+    # print(uniqueBugs)
 
 def main():
+    deduplicateCrashes('c-ares')
     print("DONE!")
 
 if __name__ == "__main__":
-    main()
+    main()  
