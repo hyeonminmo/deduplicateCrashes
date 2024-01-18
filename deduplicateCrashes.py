@@ -1,6 +1,8 @@
 import os
+import shutil
 
 LOGPATH = '/home/autofz/out'
+SHELLPATH = '/home/autofz/deduplicateCrashes'
 
 UNIFUZZ = [
     'ar',
@@ -57,6 +59,8 @@ FTS = [
     'wpantund-2018-02-27',
     ]
 
+totalUniqueBugs = []
+
 def checkOutputDirectory(outputDirectoryPath):
     if os.path.exists(outputDirectoryPath) == False:
         os.mkdir(outputDirectoryPath)
@@ -85,14 +89,37 @@ def getLogsFromFile(filePath):
                 break
     return asanLogs
 
+## make text file with input contents
+def makeTextFile(fileName: str, contents: list, filePath: str):
+    file = open(os.path.join(filePath, fileName), 'w')
+    for content in contents:
+        file.write(content + '\n')
+    file.close()
+
+def getSampleCrashFile(filePath, targetProgram):
+    with open(os.path.join(filePath, 'duplicatedFiles.txt'), 'r') as file:
+        for line in file:
+            sampleFile = line.split('.')
+            print(filePath)
+            with open(os.path.join(SHELLPATH, targetProgram+'.sh'), 'r') as shell:
+                for script in shell:
+                    if sampleFile[0] in script:
+                        command = script.split(' ')
+                        for input in command:
+                            if 'input' in input:
+                                input = input.replace('\n', '')
+                                shutil.copy(input, os.path.join(filePath, 'sampleCrash'), follow_symlinks=True)
+                        break
+            break
+        
 def deduplicateCrashes(targetProgram):
     targetPath = os.path.join(LOGPATH, targetProgram)
     logList = [] # Log details
     uniqueBugs = [] # File name
 
+    ## Start classificate ASAN logs
     # get directory list in target program directory
     for trial in os.listdir(targetPath):
-
         trialPath = os.path.join(targetPath, trial)
         # read ASAN log files in trial* 
         for logFile in os.listdir(trialPath):
@@ -106,14 +133,47 @@ def deduplicateCrashes(targetProgram):
                 tmp.append(logFile)
                 uniqueBugs.append(tmp)
                 logList.append(log)
+    ## END classificate ASAN logs
 
-    print("========================")
-    print(logList)
-    # print(uniqueBugs)
-
+    ## Start save classificated logs
+    # make uniqueBugs directory for saving logs
+    uniqueBugPath = os.path.join(targetPath, 'uniqueBugs')
+    checkOutputDirectory(uniqueBugPath)
+    makeTextFile(fileName='uniqueBugs_'+str(len(uniqueBugs)),
+                 contents=['# of uniqueBugs: '+str(len(uniqueBugs))],
+                 filePath=uniqueBugPath)
+    totalUniqueBugs.append(targetProgram + '_uniqueBugs_' + str(len(uniqueBugs)))
+    if len(uniqueBugs) != 0:
+        for num in range(1, len(uniqueBugs)+1):
+            checkOutputDirectory(os.path.join(uniqueBugPath, str(num)))
+            # make log file
+            makeTextFile(fileName='asanLog.txt',
+                        contents=logList[num-1],
+                        filePath=os.path.join(uniqueBugPath, str(num)))
+            # make duplicated file list text file
+            makeTextFile(fileName='duplicatedFiles.txt',
+                        contents=uniqueBugs[num-1],
+                        filePath=os.path.join(uniqueBugPath, str(num)))
+    ## End save classificated logs
+    
+    if len(uniqueBugs) != 0:
+        for num in range(1, len(uniqueBugs)+1):
+            getSampleCrashFile(filePath=os.path.join(uniqueBugPath, str(num)), targetProgram=targetProgram)
+    
 def main():
-    deduplicateCrashes('c-ares')
+    targetProgram = [
+                     'jhead',
+                    #  'vorbis-2017-12-11'
+                     ]
+    for target in targetProgram:
+        deduplicateCrashes(target)
+
+    # make total unique bug file in output directory
+    makeTextFile(fileName='result.txt',
+                 contents=totalUniqueBugs,
+                 filePath=LOGPATH)
+    
     print("DONE!")
 
 if __name__ == "__main__":
-    main()  
+    main()
