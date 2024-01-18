@@ -162,8 +162,30 @@ def deduplicateCrashes(targetProgram):
     
 def main():
     targetProgram = [
+                    #  'c-ares',
+                     'cflow',
+                     'flvmeta',
+                     'guetzli-2017-3-30',
+                     'harfbuzz-1.3.2',
                      'jhead',
-                    #  'vorbis-2017-12-11'
+                     'json-2017-02-12',
+                     'lame',
+                     'libjpeg-turbo-07-2017',
+                     'libpng-1.2.56',
+                     'libssh-2017-1272',
+                     'libxml2-v2.9.2',
+                    #  'mp42aac',
+                     'mujs',
+                     'openssl-1.0.1f',
+                     'openssl-1.0.2d',
+                     'openssl-1.1.0c-bignum',
+                     'openssl-1.1.0c-x509',
+                     'pcre2-10.00',
+                    #  'proj4',
+                     'sqlite-2016-11-14',
+                     'sqlite3',
+                     'tcpdump',
+                     'vorbis-2017-12-11'
                      ]
     for target in targetProgram:
         deduplicateCrashes(target)
