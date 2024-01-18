@@ -95,7 +95,7 @@ def deduplicateCrashes(targetProgram):
 
         trialPath = os.path.join(targetPath, trial)
         # read ASAN log files in trial* 
-        for logFile in os.listdir(trial):
+        for logFile in os.listdir(trialPath):
             logPath = os.path.join(trialPath, logFile)
             log = getLogsFromFile(logPath)
             # if the crash is unique crash
